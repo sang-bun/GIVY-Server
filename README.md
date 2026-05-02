@@ -113,5 +113,3 @@ KIS 호출 구간에 try-catch로 예외를 흡수하고, 실패 시 미리 정�
 | 팀 프로젝트 원본 레포지토리 | [GIVY-Server 바로가기](https://github.com/sang-bun/GIVY-Server) |
 
 ---
-
-> `원본-레포-GitHub-URL`, `API-명세서-URL`은 실제 주소로 교체해 주세요.
