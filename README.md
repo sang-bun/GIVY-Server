@@ -1,86 +1,117 @@
-## 프로젝트 초기 설계
+# 🌱 Givy (기비) — 백엔드 포트폴리오 (포크된 레포지토리)
 
-본 프로젝트는 ERD 및 세부 기능 정의 이전 단계에서  
-**백엔드 구조의 일관성과 확장성 확보**를 목표로 초기 설계를 진행.
-
-* 주의사항
-
-1. 카카오 소셜 로그인의 경우 카카오 계정의 비밀번호는 당연히 카카오 인증 서버에서 해당 사용자의 PWD 줄 수 없으니 /global/oauth/service/OauthUserService 내 "kakao_oauth_placeholder" 문자열로 비밀번호 하드코딩하여 인코딩해서 DB에 넣었음.
-2. 배포가 안되있어 로컬 DB로 application.yml 설정하였으니 각자 'givy' 이름의 DB 생성
-3. .env 파일에 ${DB_USER}, ${DB_PWD}, ${JWT_SECRET}, ${JWT_EXPIRATION_MS} 설정 후 터미널에서 실행
-4. ./gradlew clean build 시 test 코드 생성 안해서 실패할 것임. -> ./gradlew clean build -x test -> ./gradlew bootRun으로 실행
-5. application.yml 내 oauth.kakao에 관련하여 client-secret은 절대 유출 x (카카오 개발자 사이트에서 카카오 소셜 로그인 RestAPI 문서 보시면 됩니다.)
-6. 제가 사용한 JWT_SECRET, CLIENT_SECRET은 보내드리겠습니다.
+> **본 레포지토리는 팀 프로젝트 [GIVY-Server](https://github.com/sang-bun/GIVY-Server)를 기반으로, 제 기여 범위를 중심으로 재구성한 포트폴리오용 레포지토리입니다.**
 
 ---
 
-### 1. Global 디렉토리 구조 설계 (ERD 이전 단계)
+## 📌 1. 프로젝트 개요 및 나의 역할
 
-- ERD 설계 이전이라도 도메인 간 책임을 명확히 하기 위해  
-  전역(Global) 디렉토리 구조를 먼저 정의
-- 공통 설정, 공통 응답, 공통 예외 처리 등은 도메인과 분리하여 관리
-
-### 2. User 도메인 중심 설계
-
-- 인증, 인가, 소셜 로그인 등 대부분의 기능이 User 도메인에 의존하므로  
-  User 도메인을 기준으로 프로젝트 구조를 설계
-- 추후 다른 도메인 추가 시 동일한 패턴으로 확장 가능하도록 구성
-
-### 3. DDD(Domain-Driven Design) 기반 프로젝트 폴더 설계
-
-- 도메인 단위로 패키지를 분리하여 관심사 분리
-- 각 도메인은 다음과 같은 계층 구조를 기본으로 가진다.
-  - code
-  - controller
-  - converter
-  - dto
-  - entity
-  - enums
-  - exception
-  - repository
-  - service
-### 4. API 응답 구조 통일
-
-- 클라이언트와의 명확한 통신을 위해 API 응답 형식을 통일
-- 성공 / 실패 여부, 메시지, 데이터 구조를 일관되게 유지
-- 공통 ApiResponse 객체를 통해 중복 코드 최소화
-
-### 5. 소셜 로그인 뼈대 설계
-
-- OAuth 기반 소셜 로그인 확장을 고려하여 구조만 우선 정의
-- 실제 Provider 연동 이전에 인터페이스 및 흐름 중심으로 설계
-- 추후 Google, Kakao, Naver 등 확장 가능하도록 설계
+| 항목 | 내용 |
+|------|------|
+| **한줄 소개** | *"재테크를 망설이고 있나요? Givy가 당신의 첫걸음을 도와드립니다."* 금융 초보자의 자산 형성 시작을 돕고, 함께 성장하는 맞춤형 헬퍼 서비스 |
+| **개발 기간** | 2026.01 ~ 2026.02 (약 2개월) |
+| **나의 역할** | Back-end — 인증/인가, 투자 성향 분석, 추천, 홈 도메인 API 설계 및 구현 |
+| **기여도 요약** | 서비스 관문인 인증 인프라를 구축하고, 유저별 투자 성향을 분석해 상품을 추천하는 **의사결정 트리 기반 분류 로직**을 구현했습니다. 프론트엔드 친화적인 데이터 가공과, 사용자 상태(챌린지 유무)에 따라 달라지는 **동적 홈 API**를 설계했습니다. |
 
 ---
 
-## Git Commit 규칙
+## 🛠 2. 활용 기술 스택 (Tech Stack)
 
-본 프로젝트는 커밋 히스토리의 가독성과 협업 효율을 위해  
-다음과 같은 커밋 메시지 규칙을 따른다.
+### Language & Framework
 
-### 커밋 타입
+- Java 21  
+- Spring Boot 3.5  
 
-- `init` : 프로젝트 초기 설정
-- `feat` : 새로운 기능 추가
-- `fix` : 버그 수정
-- `refactor` : 리팩토링 (기능 변경 없음)
-- `docs` : 문서 수정 (README 등)
-- `chore` : 빌드 설정, 패키지 관리 등 기타 작업
-- `test` : 테스트 코드 추가 및 수정
+### Database & ORM
 
-### 커밋 메시지 형식
+- MySQL  
+- Spring Data JPA  
 
-#### 예시
-- init: add README
-- feat: implement user signup API
-- fix: resolve login validation bug
-- refactor: reorganize user domain packages
-- docs: update project initial design
+### Security & Authentication
 
+- Spring Security  
+- JWT  
 
-- 한 커밋에는 **하나의 목적만 포함**
-- 불필요하게 긴 커밋 메시지는 지양
-- 작업 의도가 드러나도록 명확하게 작성
+### API, Web & External Integration
+
+- Spring Web (REST)  
+- RestTemplate — Google OAuth 연동  
+- WebClient — 한국투자증권(KIS) API 연동  
+- SpringDoc OpenAPI 3 (Swagger) — API 문서화  
+
+### Build & Environment
+
+- Gradle  
+- Lombok, Bean Validation  
 
 ---
 
+## 🔥 3. 주요 담당 업무 및 기여도 (My Contributions)
+
+### 투자 성향 분석 및 맞춤 상품 추천
+
+**배경**  
+설문 답변을 바탕으로 위험 선호도, 투자 기간, 성향을 함께 고려해, 파킹형·자산배분형 등 적합한 금융 상품 축으로 매핑해야 했습니다.
+
+**구현**  
+답변을 R(위험), L(기간), T(성향) 점수로 치환한 뒤, 단계적 조건 분기로 최종 투자 유형을 판별하는 의사결정 트리 를 서비스 계층에 설계·구현했습니다. 이 유형을 기준으로 추천 상품 풀을 조회하고, 추천 이벤트·목록 API로 이어지도록 구성했습니다.
+
+---
+
+### 사용자 상태 기반 동적 홈 API (`GET /home`)
+
+**배경**  
+챌린지 시작 전과 시작 후에 프론트가 그려야 할 UI(추천 중심 vs 실시간 수익·차트 중심)가 달랐습니다.
+
+**구현**  
+프론트 분기 부담을 줄이기 위해 단일 엔드포인트로 설계했습니다. 서버에서 사용자 상태(`BEFORE_CHALLENGE` / `AFTER_CHALLENGE`)를 판별한 뒤, 상태에 맞는 응답 DTO 구조로 변환해 내려주도록 서빙 로직을 구성했습니다.
+
+---
+
+### 외부 API 데이터 가공 및 서빙 (KIS)
+
+**배경**  
+챌린지 진행 중인 상품의 현재가, 52주 변동폭, 차트용 시세를 홈 대시보드에 녹여야 했습니다.
+
+**구현**  
+KIS API로 수집한 원시 데이터를 클라이언트에 그대로 노출하지 않고, 서버에서 DTO에 맞게 재가공했습니다. 차트 렌더링을 위해 최근 약 20영업일 종가를 과거 → 현재 순으로 정렬해 응답 구조를 맞췄습니다.
+
+---
+
+## 💡 4. 트러블 슈팅 (Troubleshooting)
+
+### [DB & JPA] `NonUniqueResultException` 방어 — 증권 계좌 연동 이력 중복
+
+**문제**  
+한 유저에게 증권 계좌 연동 이력이 여러 건 쌓이는 경우, 단건 조회를 가정한 쿼리가 중복 행을 만나 `NonUniqueResultException`으로 500이 발생할 수 있었습니다.
+
+**해결**  
+원인을 데이터 중복 가능성과 쿼리 가정으로 좁힌 뒤, Repository 조회를 `findFirstBy...OrderBy...Desc` 형태로 변경해 연동 시각·PK 기준 최신 1건만 안전하게 가져오도록 리팩터링했습니다.
+
+**결과**  
+중복 적재가 있어도 서버가 중단되지 않고, 최신 연동 정보를 기준으로 응답할 수 있어 안정성을 확보했습니다.
+
+---
+
+### [외부 연동] KIS API 장애 시 홈 API 가용성
+
+**문제**  
+`GET /home`의 챌린지 이후 화면 구성 시 KIS 호출이 실패하면, 홈 API 전체가 실패해 **메인 화면조차 로드되지 않는** 장애 전파 위험이 있었습니다.
+
+**해결**  
+KIS 호출 구간에 try-catch로 예외를 흡수하고, 실패 시 미리 정의한 기본값(현재가 0, 차트 빈 리스트 등)으로 DTO를 채워 응답을 완성하도록 Fallback 처리했습니다.
+
+**결과**  
+외부 통신이 불안정해도 핵심 홈 정보는 유지되어, 가용성과 사용자 경험을 방어할 수 있었습니다.
+
+---
+
+## 🔗 5. 링크
+
+| 구분 | 링크 |
+|------|------|
+| 팀 프로젝트 원본 레포지토리 | [GIVY-Server 바로가기](https://github.com/sang-bun/GIVY-Server) |
+
+---
+
+> `원본-레포-GitHub-URL`, `API-명세서-URL`은 실제 주소로 교체해 주세요.
